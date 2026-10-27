@@ -16,7 +16,7 @@ return [
     'brand' => [
         'name' => 'Voucherku',
         'tagline' => 'Voucher belanja digital, praktis & hemat',
-        'description' => 'Pilih voucher sesuai kebutuhan Anda, bayar dengan mudah, dan gunakan langsung di seluruh outlet kami.',
+        'description' => 'Pilih voucher sesuai kebutuhan Anda, dan  bayar dengan mudah.',
         'support_contact' => 'cs@voucherku.test',
     ],
 
