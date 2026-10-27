@@ -33,15 +33,15 @@ jobs:
       - name: Install dependency
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Jalankan test
-        run: php artisan test
-
       - name: Siapkan .env khusus build
         run: |
           cp .env.example .env
           sed -i 's/^APP_ENV=.*/APP_ENV=production/; s/^APP_DEBUG=.*/APP_DEBUG=false/; s/^SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env
           echo "ASSET_URL=${{ steps.pages.outputs.base_url }}" >> .env
           php artisan key:generate --force
+
+      - name: Jalankan test
+        run: php artisan test
 
       - name: Render halaman ke HTML statis
         run: |
