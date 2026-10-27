@@ -1,0 +1,69 @@
+# Me-render landing page Laravel menjadi HTML statis dan mempublikasikannya
+# ke GitHub Pages. Halaman ini tidak butuh server setelah di-render karena
+# pemilihan voucher dan ringkasan berjalan di browser (public/js).
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependency
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Jalankan test
+        run: php artisan test
+
+      - name: Siapkan .env khusus build
+        run: |
+          cp .env.example .env
+          sed -i 's/^APP_ENV=.*/APP_ENV=production/; s/^APP_DEBUG=.*/APP_DEBUG=false/; s/^SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env
+          echo "ASSET_URL=${{ steps.pages.outputs.base_url }}" >> .env
+          php artisan key:generate --force
+
+      - name: Render halaman ke HTML statis
+        run: |
+          php artisan serve --port=8000 > /dev/null 2>&1 &
+          mkdir -p _site/css _site/js
+          curl --silent --fail --retry 10 --retry-connrefused --retry-delay 1 \
+            http://127.0.0.1:8000/ -o _site/index.html
+          cp public/css/voucher-landing.css _site/css/
+          cp public/js/voucher-landing.js _site/js/
+          cp public/favicon.ico public/robots.txt _site/ 2>/dev/null || true
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
