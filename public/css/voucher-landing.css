@@ -1,0 +1,143 @@
+:root {
+    --vl-primary: #0f5132;
+    --vl-primary-light: #198754;
+    --vl-accent: #ffc107;
+    --vl-summary-height: 84px;
+}
+
+body {
+    background-color: #f8f9fa;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Hero */
+.hero {
+    background: linear-gradient(135deg, var(--vl-primary) 0%, var(--vl-primary-light) 100%);
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+}
+
+.brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: .75rem;
+    background: var(--vl-accent);
+    color: var(--vl-primary);
+    font-weight: 800;
+}
+
+/* Kartu voucher (label dari input radio .btn-check) */
+.voucher-card {
+    position: relative;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+    box-shadow: 0 .125rem .5rem rgba(0, 0, 0, .06);
+    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+.voucher-card:hover {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08);
+}
+
+.btn-check:checked + .voucher-card {
+    border-color: var(--vl-primary-light);
+    box-shadow: 0 .5rem 1.25rem rgba(25, 135, 84, .2);
+}
+
+.btn-check:focus-visible + .voucher-card {
+    outline: 3px solid rgba(25, 135, 84, .5);
+    outline-offset: 2px;
+}
+
+.voucher-card.is-unavailable {
+    cursor: not-allowed;
+    opacity: .55;
+}
+
+.voucher-price {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--vl-primary);
+}
+
+.voucher-check {
+    position: absolute;
+    top: -.6rem;
+    right: -.6rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--vl-primary-light);
+    color: #fff;
+    font-weight: 700;
+}
+
+.btn-check:checked + .voucher-card .voucher-check {
+    display: inline-flex;
+}
+
+/* Jumlah */
+.quantity-group {
+    max-width: 10rem;
+}
+
+.quantity-group .btn {
+    min-width: 2.75rem;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.quantity-group input::-webkit-outer-spin-button,
+.quantity-group input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.quantity-group input {
+    -moz-appearance: textfield;
+}
+
+/* Langkah pembelian */
+.step-number {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--vl-primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+/* Ringkasan menempel di bawah */
+.summary-bar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
+    background: #fff;
+    border-top: 1px solid rgba(0, 0, 0, .08);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pb-summary {
+    padding-bottom: calc(var(--vl-summary-height) + env(safe-area-inset-bottom));
+}
+
+.min-w-0 {
+    min-width: 0;
+}
+
+.summary-list dd {
+    margin-bottom: .5rem;
+}
