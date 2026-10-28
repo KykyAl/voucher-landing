@@ -67,6 +67,16 @@ class VoucherLandingTest extends TestCase
             ->assertDontSee('Voucher Belanja 100 Ribu');
     }
 
+    public function test_assets_are_versioned_by_content_to_bust_browser_cache(): void
+    {
+        $cssHash = hash_file('crc32b', public_path('css/voucher-landing.css'));
+        $jsHash = hash_file('crc32b', public_path('js/voucher-landing.js'));
+
+        $this->get('/')
+            ->assertSee('css/voucher-landing.css?v='.$cssHash, false)
+            ->assertSee('js/voucher-landing.js?v='.$jsHash, false);
+    }
+
     public function test_format_rupiah_uses_indonesian_thousand_separator(): void
     {
         $this->assertSame('Rp1.250.000', VoucherCatalog::formatRupiah(1250000));
