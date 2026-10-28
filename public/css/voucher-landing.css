@@ -2,11 +2,18 @@
     --vl-primary: #0f5132;
     --vl-primary-light: #198754;
     --vl-accent: #ffc107;
+    --vl-ink: #0c2a1e;
+    --vl-muted: #5f6f68;
+    --vl-line: #dfe7e3;
+    --vl-page-bg: #f3f6f4;
+    --vl-stub: linear-gradient(165deg, #0b5d3b 0%, #138a59 55%, #22b07a 100%);
+    --vl-stub-gold: linear-gradient(165deg, #9a6412 0%, #d39a2c 55%, #f2c25a 100%);
     --vl-summary-height: 84px;
+    --bs-body-font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
-    background-color: #f8f9fa;
+    background-color: var(--vl-page-bg);
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -21,87 +28,640 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: .75rem;
-    background: var(--vl-accent);
-    color: var(--vl-primary);
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: inset 0 0 0 2px #f6c21c, 0 0 0 2px #1d9bd7, 0 .25rem .75rem rgba(0, 0, 0, .2);
+}
+
+.brand-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+
+.brand-logo {
+    flex-shrink: 0;
+}
+
+/*
+ * Tiket voucher (label dari input radio .btn-check).
+ * Pita kiri + garis sobekan mengikuti konsep voucher cetak.
+ */
+.voucher-ticket {
+    position: relative;
+    display: block;
+    border-radius: 1.125rem;
+    box-shadow: 0 1px 2px rgba(12, 42, 30, .06), 0 .5rem 1.5rem rgba(12, 42, 30, .07);
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.voucher-ticket:not(.is-unavailable):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px rgba(12, 42, 30, .06), 0 1rem 2rem rgba(12, 42, 30, .12);
+}
+
+.voucher-ticket.is-in-cart {
+    box-shadow: 0 0 0 2px var(--vl-primary-light), 0 1rem 2rem rgba(25, 135, 84, .22);
+}
+
+.voucher-ticket-inner {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    border-radius: inherit;
+    background: #fff;
+}
+
+.voucher-stub {
+    position: relative;
+    display: flex;
+    flex: 0 0 3.25rem;
+    flex-direction: column;
+    align-items: center;
+    gap: .75rem;
+    padding: 1rem 0;
+    color: #fff;
+    background:
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, .07) 0 6px, transparent 6px 14px),
+        var(--vl-stub);
+}
+
+.voucher-ticket.is-featured .voucher-stub {
+    background:
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, .1) 0 6px, transparent 6px 14px),
+        var(--vl-stub-gold);
+}
+
+.voucher-stub-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border: 1px solid rgba(255, 255, 255, .4);
+    border-radius: .625rem;
+    background: rgba(255, 255, 255, .18);
+    font-size: .875rem;
     font-weight: 800;
 }
 
-/* Kartu voucher (label dari input radio .btn-check) */
-.voucher-card {
+.voucher-stub-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: .8125rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.voucher-body {
     position: relative;
-    cursor: pointer;
-    border: 2px solid transparent;
-    border-radius: 1rem;
-    box-shadow: 0 .125rem .5rem rgba(0, 0, 0, .06);
-    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    padding: 1rem 1.125rem 1.125rem;
+    border-left: 2px dashed var(--vl-line);
+    background: radial-gradient(120% 70% at 100% 0, rgba(34, 176, 122, .1), transparent 60%);
+    color: var(--vl-ink);
 }
 
-.voucher-card:hover {
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08);
+.voucher-ticket.is-featured .voucher-body {
+    background: radial-gradient(120% 70% at 100% 0, rgba(242, 194, 90, .18), transparent 60%);
 }
 
-.btn-check:checked + .voucher-card {
-    border-color: var(--vl-primary-light);
-    box-shadow: 0 .5rem 1.25rem rgba(25, 135, 84, .2);
+/* Lubang sobekan di atas & bawah garis putus-putus */
+.voucher-body::before,
+.voucher-body::after {
+    position: absolute;
+    left: calc(-.625rem - 1px);
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: var(--vl-notch-bg, var(--vl-page-bg));
+    content: "";
 }
 
-.btn-check:focus-visible + .voucher-card {
-    outline: 3px solid rgba(25, 135, 84, .5);
-    outline-offset: 2px;
+.voucher-body::before {
+    top: -.625rem;
 }
 
-.voucher-card.is-unavailable {
-    cursor: not-allowed;
-    opacity: .55;
+.voucher-body::after {
+    bottom: -.625rem;
+}
+
+.voucher-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-bottom: .875rem;
+}
+
+.voucher-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    color: #1d8fd0;
+    font-size: .8125rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+}
+
+.voucher-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    height: 1.375rem;
+    white-space: nowrap;
+}
+
+.voucher-label-row .voucher-badge {
+    padding: .2rem .5rem;
+    font-size: .625rem;
+    line-height: 1;
+}
+
+.voucher-code {
+    padding: .2rem .55rem;
+    border: 1px dashed #b9c9c1;
+    border-radius: .5rem;
+    background: #f6faf8;
+    color: var(--vl-primary);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+}
+
+.voucher-code.is-placeholder {
+    align-self: flex-start;
+    font-size: .875rem;
+    letter-spacing: .2em;
+}
+
+.voucher-badge {
+    padding: .2rem .6rem;
+    border-radius: 999px;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+}
+
+.voucher-badge.is-gold {
+    background: linear-gradient(135deg, #fff3d1, #ffe39a);
+    color: #7a4d00;
+    box-shadow: inset 0 0 0 1px rgba(211, 154, 44, .35);
+}
+
+.voucher-badge.is-muted {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.voucher-label {
+    display: block;
+    color: var(--vl-muted);
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.voucher-amount {
+    display: block;
+    margin: .1rem 0 .35rem;
+    font-size: clamp(1.625rem, 1.3rem + 1vw, 1.875rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    color: var(--vl-ink);
+}
+
+.voucher-name {
+    margin: 0;
+    font-size: .875rem;
+    font-weight: 700;
+}
+
+.voucher-desc {
+    margin: .15rem 0 0;
+    color: var(--vl-muted);
+    font-size: .8125rem;
+    line-height: 1.45;
+}
+
+.voucher-divider {
+    display: block;
+    margin: auto 0 .875rem;
+    padding-top: 1rem;
+    border-bottom: 1px dashed var(--vl-line);
+}
+
+.voucher-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: .25rem .5rem;
 }
 
 .voucher-price {
-    font-size: 1.5rem;
+    display: block;
+    font-size: 1.25rem;
     font-weight: 800;
-    color: var(--vl-primary);
+    color: var(--vl-primary-light);
+}
+
+.voucher-save {
+    flex-shrink: 0;
+    margin-bottom: .2rem;
+    padding: .2rem .55rem;
+    border-radius: .5rem;
+    background: #e3f6ec;
+    color: #0f6b43;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.voucher-validity {
+    display: flex;
+    align-items: center;
+    gap: .375rem;
+    margin-top: .625rem;
+    color: var(--vl-muted);
+    font-size: .75rem;
+}
+
+.voucher-validity svg {
+    flex-shrink: 0;
 }
 
 .voucher-check {
     position: absolute;
-    top: -.6rem;
-    right: -.6rem;
-    display: none;
+    top: -.625rem;
+    right: -.625rem;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 1.75rem;
     height: 1.75rem;
+    border: 2px solid #fff;
     border-radius: 50%;
     background: var(--vl-primary-light);
     color: #fff;
+    font-size: .8125rem;
+    font-weight: 800;
+    opacity: 0;
+    transform: scale(.5);
+    transition: opacity .15s ease, transform .2s ease;
+}
+
+.voucher-ticket.is-in-cart .voucher-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.voucher-ticket.is-unavailable .voucher-ticket-inner {
+    filter: grayscale(1);
+    opacity: .6;
+}
+
+/* Tambah ke keranjang & stepper jumlah */
+.voucher-action {
+    margin-top: .875rem;
+}
+
+.voucher-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    width: 100%;
+    height: 2.5rem;
+    padding: 0 .5rem;
+    border: 0;
+    border-radius: .75rem;
+    background: var(--vl-primary-light);
+    color: #fff;
+    font-size: .8125rem;
     font-weight: 700;
+    white-space: nowrap;
 }
 
-.btn-check:checked + .voucher-card .voucher-check {
-    display: inline-flex;
+.voucher-add:hover,
+.voucher-add:focus-visible {
+    background: var(--vl-primary);
+    color: #fff;
 }
 
-/* Jumlah */
-.quantity-group {
-    max-width: 10rem;
+.voucher-add:disabled {
+    background: #e9ecef;
+    color: #6c757d;
+    opacity: 1;
 }
 
-.quantity-group .btn {
-    min-width: 2.75rem;
+.voucher-add svg {
+    width: 18px;
+    height: 18px;
+}
+
+.qty-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+    border: 1px solid #bfe3d0;
+    border-radius: .75rem;
+    background: #f1faf5;
+}
+
+.qty-stepper[hidden] {
+    display: none;
+}
+
+.qty-stepper button {
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    background: transparent;
+    color: var(--vl-primary-light);
     font-size: 1.25rem;
+    font-weight: 700;
     line-height: 1;
 }
 
-.quantity-group input::-webkit-outer-spin-button,
-.quantity-group input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.qty-stepper button:hover:not(:disabled) {
+    background: #dff3e8;
 }
 
-.quantity-group input {
-    -moz-appearance: textfield;
+.qty-stepper button:disabled {
+    color: #adb5bd;
+}
+
+.qty-stepper button:focus-visible {
+    outline: 2px solid var(--vl-primary-light);
+    outline-offset: -2px;
+}
+
+.qty-stepper output {
+    min-width: 2rem;
+    color: var(--vl-ink);
+    font-weight: 800;
+    text-align: center;
+}
+
+.qty-stepper.is-sm {
+    border-color: var(--vl-line);
+    background: #fff;
+}
+
+.qty-stepper.is-sm button {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1rem;
+}
+
+/* Tombol & penanda jumlah keranjang */
+.cart-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: .875rem;
+    background: rgba(255, 255, 255, .14);
+    color: #fff;
+    transition: background-color .15s ease;
+}
+
+.cart-trigger:hover {
+    background: rgba(255, 255, 255, .24);
+}
+
+.cart-count {
+    position: absolute;
+    top: -.45rem;
+    right: -.45rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.375rem;
+    height: 1.375rem;
+    padding: 0 .3rem;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: var(--vl-accent);
+    color: var(--vl-ink);
+    font-size: .6875rem;
+    font-weight: 800;
+}
+
+.cart-count[hidden] {
+    display: none;
+}
+
+.cart-count.is-bump {
+    animation: vl-bump .35s ease;
+}
+
+@keyframes vl-bump {
+    50% {
+        transform: scale(1.35);
+    }
+}
+
+.summary-icon {
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: .875rem;
+    background: #e3f6ec;
+    color: var(--vl-primary-light);
+}
+
+/* Drawer keranjang */
+.cart-drawer {
+    --bs-offcanvas-width: 420px;
+    background: var(--vl-page-bg);
+}
+
+.cart-drawer:focus {
+    outline: 0;
+}
+
+.cart-drawer .offcanvas-header {
+    border-bottom: 1px solid var(--vl-line);
+    background: #fff;
+}
+
+.cart-empty {
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.cart-empty-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: #e3f6ec;
+    color: var(--vl-primary-light);
+}
+
+.cart-empty-icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.cart-item {
+    display: flex;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(12, 42, 30, .06), 0 .25rem .75rem rgba(12, 42, 30, .06);
+}
+
+.cart-item-stub {
+    display: flex;
+    flex: 0 0 2.25rem;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background:
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, .07) 0 6px, transparent 6px 14px),
+        var(--vl-stub);
+}
+
+.cart-item.is-featured .cart-item-stub {
+    background:
+        repeating-linear-gradient(135deg, rgba(255, 255, 255, .1) 0 6px, transparent 6px 14px),
+        var(--vl-stub-gold);
+}
+
+.cart-item-stub span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: .6875rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.cart-item-body {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: .75rem .875rem;
+    border-left: 2px dashed var(--vl-line);
+    color: var(--vl-ink);
+}
+
+.cart-item-name {
+    font-size: .875rem;
+    font-weight: 700;
+}
+
+.cart-item-remove {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    border-radius: .5rem;
+    background: transparent;
+    color: var(--vl-muted);
+}
+
+.cart-item-remove:hover {
+    background: #fdecec;
+    color: #b02a37;
+}
+
+.cart-footer {
+    padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--vl-line);
+    background: #fff;
+}
+
+.cart-limit {
+    margin-bottom: .75rem;
+    padding: .5rem .75rem;
+    border-radius: .625rem;
+    background: #fff3d1;
+    color: #7a4d00;
+    font-size: .8125rem;
+    font-weight: 600;
+}
+
+.cart-totals {
+    margin-bottom: 1rem;
+}
+
+.cart-totals > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: .35rem;
+    font-size: .875rem;
+}
+
+.cart-totals dt {
+    color: var(--vl-muted);
+    font-weight: 400;
+}
+
+.cart-totals dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.cart-totals .is-total {
+    align-items: center;
+    margin: .5rem 0 0;
+    padding-top: .5rem;
+    border-top: 1px dashed var(--vl-line);
+}
+
+.cart-totals .is-total dt {
+    color: var(--vl-ink);
+    font-weight: 700;
+}
+
+.cart-totals .is-total dd {
+    color: var(--vl-primary-light);
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .voucher-ticket,
+    .voucher-check {
+        transition: none;
+    }
+
+    .voucher-ticket:not(.is-unavailable):hover {
+        transform: none;
+    }
+
+    .cart-count.is-bump {
+        animation: none;
+    }
 }
 
 /* Langkah pembelian */
@@ -136,8 +696,4 @@ body {
 
 .min-w-0 {
     min-width: 0;
-}
-
-.summary-list dd {
-    margin-bottom: .5rem;
 }

@@ -13,12 +13,25 @@ class VoucherLandingTest extends TestCase
 
         $response->assertOk()
             ->assertSee('lang="id"', false)
-            ->assertSee('Voucherku')
+            ->assertSee('SO NET')
             ->assertSee('Voucher Belanja 100 Ribu')
             ->assertSee('Rp92.500')
             ->assertSee('Berlaku 60 hari setelah pembelian')
             ->assertSee('Cara Pembelian')
             ->assertSee('Pembayaran belum tersedia.');
+    }
+
+    public function test_cart_drawer_uses_configured_maximum_quantity(): void
+    {
+        config(['voucher.max_quantity' => 5]);
+
+        $response = $this->get('/');
+
+        $response->assertOk()
+            ->assertSee('id="cart"', false)
+            ->assertSee('data-max-quantity="5"', false)
+            ->assertSee('maksimal 5 voucher per pembelian')
+            ->assertSee('data-cart-add value="VCR-100"', false);
     }
 
     public function test_unavailable_voucher_cannot_be_selected(): void

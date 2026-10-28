@@ -14,7 +14,7 @@
 return [
 
     'brand' => [
-        'name' => 'Voucherku',
+        'name' => 'SO NET',
         'tagline' => 'Voucher belanja digital, praktis & hemat',
         'description' => 'Pilih voucher sesuai kebutuhan Anda, dan  bayar dengan mudah.',
         'support_contact' => 'cs@voucherku.test',
