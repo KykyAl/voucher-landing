@@ -32,7 +32,7 @@
 
         <div class="row g-3">
             @foreach ($vouchers as $voucher)
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-sm-6 col-xl-3">
                     <article @class([
                                  'voucher-ticket h-100',
                                  'is-featured' => $voucher['is_featured'] && $voucher['is_available'],
