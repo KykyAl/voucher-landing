@@ -20,7 +20,7 @@ class VoucherCatalog
     }
 
     /**
-     * @return list<array{code: string, name: string, description: string, face_value: int, price: int, validity_days: int, is_available: bool, is_featured: bool, discount_percent: int}>
+     * @return list<array{code: string, name: string, description: string, face_value: int, price: int, duration: string, is_available: bool, is_featured: bool, discount_percent: int}>
      */
     public function vouchers(): array
     {

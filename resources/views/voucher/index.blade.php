@@ -11,7 +11,7 @@
     <div class="container py-4 py-md-5">
         <div class="d-flex align-items-center justify-content-between gap-2 mb-4">
             <div class="d-flex align-items-center gap-2">
-                <span class="brand-mark"><x-brand-logo :size="17" /></span>
+                <span class="brand-mark"><x-brand-logo :size="34" /></span>
                 <span class="brand-title">{{ $brand['name'] }}</span>
             </div>
             <button type="button" class="cart-trigger" data-bs-toggle="offcanvas" data-bs-target="#cart" aria-label="Buka keranjang">
@@ -32,7 +32,7 @@
 
         <div class="row g-3">
             @foreach ($vouchers as $voucher)
-                <div class="col-12 col-sm-6 col-xl-3">
+                <div class="col-12 col-md-4">
                     <article @class([
                                  'voucher-ticket h-100',
                                  'is-featured' => $voucher['is_featured'] && $voucher['is_available'],
@@ -42,7 +42,7 @@
                              data-name="{{ $voucher['name'] }}"
                              data-price="{{ $voucher['price'] }}"
                              data-face-value="{{ $voucher['face_value'] }}"
-                             data-validity="{{ $voucher['validity_days'] }}"
+                             data-duration="{{ $voucher['duration'] }}"
                              data-available="{{ $voucher['is_available'] ? '1' : '0' }}">
                         <div class="voucher-ticket-inner">
                             {{-- Sobekan tiket: masa berlaku, seperti pita samping pada voucher cetak --}}
@@ -50,24 +50,24 @@
                                 <span class="voucher-stub-mark">
                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 8.5a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16.3a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1.3" fill="currentColor" stroke="none"/></svg>
                                 </span>
-                                <span class="voucher-stub-text">{{ $voucher['validity_days'] }} Hari</span>
+                                <span class="voucher-stub-text">{{ $voucher['duration'] }}</span>
                             </div>
 
                             <div class="voucher-body">
                                 <div class="voucher-head">
-                                    <span class="voucher-brand"><x-brand-logo :size="12" />{{ $brand['name'] }}</span>
+                                    <span class="voucher-brand"><x-brand-logo :size="24" />{{ $brand['name'] }}</span>
                                     <span class="voucher-code">{{ $voucher['code'] }}</span>
                                 </div>
 
                                 <div class="voucher-label-row">
-                                    <span class="voucher-label">Nilai voucher</span>
+                                    <span class="voucher-label">Harga</span>
                                     @if (! $voucher['is_available'])
                                         <span class="voucher-badge is-muted">Stok habis</span>
                                     @elseif ($voucher['is_featured'])
                                         <span class="voucher-badge is-gold">★ Terlaris</span>
                                     @endif
                                 </div>
-                                <span class="voucher-amount">{{ $rupiah($voucher['face_value']) }}</span>
+                                <span class="voucher-amount">{{ $rupiah($voucher['price']) }}</span>
                                 <h3 class="voucher-name">{{ $voucher['name'] }}</h3>
                                 <p class="voucher-desc">{{ $voucher['description'] }}</p>
 
@@ -75,16 +75,18 @@
 
                                 <div class="voucher-foot">
                                     <div>
-                                        <span class="voucher-label">Harga</span>
-                                        <span class="voucher-price">{{ $rupiah($voucher['price']) }}</span>
+                                        <span class="voucher-label">Masa aktif</span>
+                                        <span class="voucher-duration">
+                                            <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 1.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm-.75 2v4.06l3.02 1.8.77-1.29-2.29-1.37V4.5h-1.5Z"/></svg>
+                                            {{ $voucher['duration'] }}
+                                        </span>
                                     </div>
                                     @if ($voucher['discount_percent'] > 0)
-                                        <span class="voucher-save">Hemat {{ $voucher['discount_percent'] }}%</span>
+                                        <div class="text-end">
+                                            <span class="voucher-strike">{{ $rupiah($voucher['face_value']) }}</span>
+                                            <span class="voucher-save">Hemat {{ $voucher['discount_percent'] }}%</span>
+                                        </div>
                                     @endif
-                                </div>
-                                <div class="voucher-validity">
-                                    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 1.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm-.75 2v4.06l3.02 1.8.77-1.29-2.29-1.37V4.5h-1.5Z"/></svg>
-                                    Berlaku {{ $voucher['validity_days'] }} hari setelah pembelian
                                 </div>
 
                                 <div class="voucher-action">
@@ -148,12 +150,12 @@
             <div class="min-w-0">
                 <div id="summary-empty" class="small text-secondary">Keranjang masih kosong</div>
                 <div id="summary-filled" class="d-none">
-                    <div class="small text-secondary text-truncate"><span id="summary-qty"></span> voucher · hemat <span id="summary-saving"></span></div>
+                    <div class="small text-secondary text-truncate"><span id="summary-qty"></span> voucher<span id="summary-saving-wrap"> · hemat <span id="summary-saving"></span></span></div>
                     <div class="fw-bold fs-5" id="summary-total"></div>
                 </div>
             </div>
         </div>
-        <button type="button" id="btn-cart" class="btn btn-success btn-lg fw-semibold flex-shrink-0" disabled
+        <button type="button" id="btn-cart" class="btn btn-brand btn-lg fw-semibold flex-shrink-0" disabled
                 data-bs-toggle="offcanvas" data-bs-target="#cart">
             Lihat Keranjang
         </button>
@@ -175,7 +177,7 @@
             <span class="cart-empty-icon">{!! $cartIcon !!}</span>
             <h3 class="h6 fw-bold mb-1">Keranjang masih kosong</h3>
             <p class="small text-secondary mb-3">Tambahkan voucher pilihan Anda untuk mulai berbelanja.</p>
-            <button type="button" class="btn btn-outline-success fw-semibold" data-bs-dismiss="offcanvas">Pilih Voucher</button>
+            <button type="button" class="btn btn-outline-brand fw-semibold" data-bs-dismiss="offcanvas">Pilih Voucher</button>
         </div>
         <ul id="cart-items" class="list-unstyled d-grid gap-3 mb-0"></ul>
     </div>
@@ -183,8 +185,8 @@
     <div id="cart-footer" class="cart-footer d-none">
         <p id="cart-limit" class="cart-limit d-none">Batas {{ $maxQuantity }} voucher per pembelian sudah tercapai.</p>
         <dl class="cart-totals">
-            <div><dt>Nilai voucher</dt><dd id="cart-face-total"></dd></div>
-            <div><dt>Hemat</dt><dd id="cart-saving" class="text-success"></dd></div>
+            <div data-saving-row><dt>Nilai voucher</dt><dd id="cart-face-total"></dd></div>
+            <div data-saving-row><dt>Hemat</dt><dd id="cart-saving" class="text-success"></dd></div>
             <div class="is-total"><dt>Total bayar</dt><dd id="cart-total"></dd></div>
         </dl>
 
@@ -192,20 +194,20 @@
             <span aria-hidden="true">ℹ️</span>
             <div>
                 <strong>Pembayaran belum tersedia.</strong>
-                Fitur pembayaran online sedang kami siapkan. Silakan kembali lagi nanti.
+                Fitur pembayaran tahap develop.
             </div>
         </div>
 
         <div class="d-flex gap-2">
             <button type="button" id="cart-clear" class="btn btn-outline-secondary">Kosongkan</button>
-            <button type="button" class="btn btn-success fw-semibold flex-grow-1" disabled>Bayar Sekarang</button>
+            <button type="button" class="btn btn-brand fw-semibold flex-grow-1" disabled>Bayar Sekarang</button>
         </div>
     </div>
 </div>
 
 <template id="cart-item-template">
     <li class="cart-item">
-        <span class="cart-item-stub" aria-hidden="true"><span data-field="validity"></span></span>
+        <span class="cart-item-stub" aria-hidden="true"><span data-field="duration"></span></span>
         <div class="cart-item-body">
             <div class="d-flex justify-content-between align-items-start gap-2">
                 <div class="min-w-0">

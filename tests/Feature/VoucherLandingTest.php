@@ -13,10 +13,12 @@ class VoucherLandingTest extends TestCase
 
         $response->assertOk()
             ->assertSee('lang="id"', false)
-            ->assertSee('SO NET')
-            ->assertSee('Voucher Belanja 100 Ribu')
-            ->assertSee('Rp92.500')
-            ->assertSee('Berlaku 60 hari setelah pembelian')
+            ->assertSee('Connect Pro')
+            ->assertSee('Voucher WiFi 1 Jam')
+            ->assertSee('Rp5.000')
+            ->assertSee('Rp10.000')
+            ->assertSee('Rp25.000')
+            ->assertSee('1 Minggu')
             ->assertSee('Cara Pembelian')
             ->assertSee('Pembayaran belum tersedia.');
     }
@@ -31,17 +33,28 @@ class VoucherLandingTest extends TestCase
             ->assertSee('id="cart"', false)
             ->assertSee('data-max-quantity="5"', false)
             ->assertSee('maksimal 5 voucher per pembelian')
-            ->assertSee('data-cart-add value="VCR-100"', false);
+            ->assertSee('data-cart-add value="CP-1HARI"', false);
     }
 
     public function test_unavailable_voucher_cannot_be_selected(): void
     {
+        config(['voucher.vouchers' => [[
+            'code' => 'CP-HABIS',
+            'name' => 'Voucher Habis',
+            'description' => 'Stok kosong.',
+            'face_value' => 5000,
+            'price' => 5000,
+            'duration' => '1 Jam',
+            'is_available' => false,
+            'is_featured' => false,
+        ]]]);
+
         $response = $this->get('/');
 
         $response->assertSee('Stok habis');
 
         $this->assertMatchesRegularExpression(
-            '/value="VCR-500"[^>]*disabled/s',
+            '/value="CP-HABIS"[^>]*disabled/s',
             $response->getContent()
         );
     }
@@ -54,7 +67,7 @@ class VoucherLandingTest extends TestCase
             'description' => 'Data pengganti.',
             'face_value' => 20000,
             'price' => 15000,
-            'validity_days' => 7,
+            'duration' => '3 Hari',
             'is_available' => true,
             'is_featured' => false,
         ]]]);
@@ -64,7 +77,8 @@ class VoucherLandingTest extends TestCase
             ->assertSee('Voucher Uji')
             ->assertSee('Rp15.000')
             ->assertSee('Hemat 25%')
-            ->assertDontSee('Voucher Belanja 100 Ribu');
+            ->assertSee('3 Hari')
+            ->assertDontSee('Voucher WiFi 1 Jam');
     }
 
     public function test_assets_are_versioned_by_content_to_bust_browser_cache(): void
