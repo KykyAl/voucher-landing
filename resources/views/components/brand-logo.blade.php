@@ -1,17 +1,10 @@
 @props(['size' => 32])
 
-{{--
-    Logo "S" SO NET: dua lengkung tiga lapis (biru-kuning-biru) yang saling
-    menyambung di tengah, masing-masing dengan titik target di pusatnya.
---}}
-<svg {{ $attributes->merge(['class' => 'brand-logo']) }} viewBox="11 2 38 64" width="{{ $size }}" height="{{ round($size * 64 / 38) }}" aria-hidden="true" focusable="false">
-    <g fill="none" stroke-width="4.2">
-        <path d="M43.02 10.07A17 17 0 1 0 30 38A9 9 0 1 1 23.11 52.79" stroke="#1d9bd7"/>
-        <path d="M36.89 15.21A9 9 0 1 0 30 30A17 17 0 1 1 16.98 57.93" stroke="#1d9bd7"/>
-        <path d="M39.96 12.64A13 13 0 1 0 30 34A13 13 0 1 1 20.04 55.36" stroke="#f6c21c"/>
+{{-- Logo "CP" Connect Pro: huruf C hitam & P biru, tebal dan miring. --}}
+<svg {{ $attributes->merge(['class' => 'brand-logo']) }} viewBox="7 5 57 30" width="{{ $size }}" height="{{ round($size * 30 / 57) }}" aria-hidden="true" focusable="false">
+    <g transform="translate(9 0) skewX(-14)">
+        <path d="M26.28 13.89A9.5 9.5 0 1 0 26.28 26.11" fill="none" stroke="#111" stroke-width="8"/>
+        <rect x="31" y="6.5" width="8" height="27" fill="#1e8fe1"/>
+        <path d="M35 10.5H46A6.5 6.5 0 0 1 46 23.5H35" fill="none" stroke="#1e8fe1" stroke-width="8"/>
     </g>
-    <circle cx="30" cy="21" r="4.6" fill="#1d9bd7"/>
-    <circle cx="30" cy="21" r="2.1" fill="#1f5fa8"/>
-    <circle cx="30" cy="47" r="4.6" fill="#1d9bd7"/>
-    <circle cx="30" cy="47" r="2.1" fill="#1f5fa8"/>
 </svg>

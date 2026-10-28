@@ -28,7 +28,7 @@
             name: card.dataset.name,
             price: parseInt(card.dataset.price, 10),
             faceValue: parseInt(card.dataset.faceValue, 10),
-            validity: card.dataset.validity,
+            duration: card.dataset.duration,
             featured: card.classList.contains('is-featured'),
         };
     });
@@ -133,7 +133,7 @@
 
             item.dataset.code = code;
             item.classList.toggle('is-featured', voucher.featured);
-            item.querySelector('[data-field="validity"]').textContent = voucher.validity + ' Hari';
+            item.querySelector('[data-field="duration"]').textContent = voucher.duration;
             item.querySelector('[data-field="name"]').textContent = voucher.name;
             item.querySelector('[data-field="price"]').textContent = rupiah.format(voucher.price);
             item.querySelector('[data-field="subtotal"]').textContent = rupiah.format(voucher.price * cart[code]);
@@ -165,8 +165,13 @@
         document.getElementById('summary-empty').classList.toggle('d-none', !isEmpty);
         document.getElementById('summary-filled').classList.toggle('d-none', isEmpty);
         document.getElementById('btn-cart').disabled = isEmpty;
+        var hasSaving = faceTotal > payTotal;
         text('summary-qty', qty);
         text('summary-saving', rupiah.format(faceTotal - payTotal));
+        document.getElementById('summary-saving-wrap').classList.toggle('d-none', !hasSaving);
+        document.querySelectorAll('[data-saving-row]').forEach(function (row) {
+            row.classList.toggle('d-none', !hasSaving);
+        });
         text('summary-total', rupiah.format(payTotal));
 
         document.getElementById('cart-empty').classList.toggle('d-none', !isEmpty);
@@ -205,6 +210,14 @@
         } else if (removeButton && owner) {
             setQuantity(owner.dataset.code, 0);
             cartElement.focus();
+        } else if (owner && owner.classList.contains('voucher-ticket') && !event.target.closest('.voucher-action')) {
+            // Klik di area kartu (bukan tombol/stepper) = tambah 1 ke keranjang.
+            var cardCode = owner.dataset.code;
+            if (!catalog[cardCode] || totalQuantity() >= maxQty) {
+                return;
+            }
+            setQuantity(cardCode, (cart[cardCode] || 0) + 1);
+            bumpCounters();
         }
     });
 

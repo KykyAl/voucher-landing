@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="description" content="@yield('description')">
-    <meta name="theme-color" content="#0f5132">
+    <meta name="theme-color" content="#0b2a55">
     <title>@yield('title')</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

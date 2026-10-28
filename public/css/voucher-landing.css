@@ -1,12 +1,12 @@
 :root {
-    --vl-primary: #0f5132;
-    --vl-primary-light: #198754;
+    --vl-primary: #0b2a55;
+    --vl-primary-light: #1670c8;
     --vl-accent: #ffc107;
-    --vl-ink: #0c2a1e;
-    --vl-muted: #5f6f68;
-    --vl-line: #dfe7e3;
-    --vl-page-bg: #f3f6f4;
-    --vl-stub: linear-gradient(165deg, #0b5d3b 0%, #138a59 55%, #22b07a 100%);
+    --vl-ink: #0c1b2e;
+    --vl-muted: #5b6b7d;
+    --vl-line: #dde5ef;
+    --vl-page-bg: #f3f6fa;
+    --vl-stub: linear-gradient(165deg, #0b2a55 0%, #1462b8 55%, #1e8fe1 100%);
     --vl-stub-gold: linear-gradient(165deg, #9a6412 0%, #d39a2c 55%, #f2c25a 100%);
     --vl-summary-height: 84px;
     --bs-body-font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -24,21 +24,51 @@ body {
     border-bottom-right-radius: 1.5rem;
 }
 
+/* Tombol warna brand (pengganti .btn-success hijau bawaan Bootstrap) */
+.btn-brand {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--vl-primary-light);
+    --bs-btn-border-color: var(--vl-primary-light);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #125ea8;
+    --bs-btn-hover-border-color: #125ea8;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #0f4f8f;
+    --bs-btn-active-border-color: #0f4f8f;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--vl-primary-light);
+    --bs-btn-disabled-border-color: var(--vl-primary-light);
+    --bs-btn-focus-shadow-rgb: 22, 112, 200;
+}
+
+.btn-outline-brand {
+    --bs-btn-color: var(--vl-primary-light);
+    --bs-btn-border-color: var(--vl-primary-light);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: var(--vl-primary-light);
+    --bs-btn-hover-border-color: var(--vl-primary-light);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #125ea8;
+    --bs-btn-active-border-color: #125ea8;
+    --bs-btn-focus-shadow-rgb: 22, 112, 200;
+}
+
 .brand-mark {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.75rem;
     height: 2.75rem;
-    border-radius: 50%;
+    padding: 0 .6rem;
+    border-radius: .875rem;
     background: #fff;
-    box-shadow: inset 0 0 0 2px #f6c21c, 0 0 0 2px #1d9bd7, 0 .25rem .75rem rgba(0, 0, 0, .2);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .2);
 }
 
 .brand-title {
     font-size: 1.25rem;
     font-weight: 800;
     letter-spacing: .08em;
+    text-transform: uppercase;
 }
 
 .brand-logo {
@@ -53,17 +83,32 @@ body {
     position: relative;
     display: block;
     border-radius: 1.125rem;
-    box-shadow: 0 1px 2px rgba(12, 42, 30, .06), 0 .5rem 1.5rem rgba(12, 42, 30, .07);
+    box-shadow: 0 1px 2px rgba(12, 27, 46, .06), 0 .5rem 1.5rem rgba(12, 27, 46, .07);
     transition: box-shadow .2s ease, transform .2s ease;
 }
 
 .voucher-ticket:not(.is-unavailable):hover {
     transform: translateY(-3px);
-    box-shadow: 0 2px 4px rgba(12, 42, 30, .06), 0 1rem 2rem rgba(12, 42, 30, .12);
+    box-shadow: 0 2px 4px rgba(12, 27, 46, .06), 0 1rem 2rem rgba(12, 27, 46, .12);
+}
+
+/* Seluruh kartu bisa diklik untuk menambah ke keranjang */
+.voucher-ticket:not(.is-unavailable) {
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.voucher-ticket:not(.is-unavailable):active {
+    transform: translateY(-1px) scale(.99);
+}
+
+.voucher-ticket.is-unavailable {
+    cursor: not-allowed;
 }
 
 .voucher-ticket.is-in-cart {
-    box-shadow: 0 0 0 2px var(--vl-primary-light), 0 1rem 2rem rgba(25, 135, 84, .22);
+    box-shadow: 0 0 0 2px var(--vl-primary-light), 0 1rem 2rem rgba(22, 112, 200, .22);
 }
 
 .voucher-ticket-inner {
@@ -125,7 +170,7 @@ body {
     min-width: 0;
     padding: 1rem 1.125rem 1.125rem;
     border-left: 2px dashed var(--vl-line);
-    background: radial-gradient(120% 70% at 100% 0, rgba(34, 176, 122, .1), transparent 60%);
+    background: radial-gradient(120% 70% at 100% 0, rgba(30, 143, 225, .1), transparent 60%);
     color: var(--vl-ink);
 }
 
@@ -166,10 +211,11 @@ body {
     display: inline-flex;
     align-items: center;
     gap: .35rem;
-    color: #1d8fd0;
+    color: #1e8fe1;
     font-size: .8125rem;
     font-weight: 800;
     letter-spacing: .1em;
+    text-transform: uppercase;
 }
 
 .voucher-label-row {
@@ -189,9 +235,9 @@ body {
 
 .voucher-code {
     padding: .2rem .55rem;
-    border: 1px dashed #b9c9c1;
+    border: 1px dashed #b7c7dc;
     border-radius: .5rem;
-    background: #f6faf8;
+    background: #f5f8fc;
     color: var(--vl-primary);
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: .75rem;
@@ -271,11 +317,24 @@ body {
     gap: .25rem .5rem;
 }
 
-.voucher-price {
-    display: block;
-    font-size: 1.25rem;
-    font-weight: 800;
+.voucher-duration {
+    display: flex;
+    align-items: center;
+    gap: .375rem;
     color: var(--vl-primary-light);
+    font-size: 1.125rem;
+    font-weight: 800;
+}
+
+.voucher-duration svg {
+    flex-shrink: 0;
+}
+
+.voucher-strike {
+    display: block;
+    color: var(--vl-muted);
+    font-size: .75rem;
+    text-decoration: line-through;
 }
 
 .voucher-save {
@@ -287,19 +346,6 @@ body {
     color: #0f6b43;
     font-size: .75rem;
     font-weight: 700;
-}
-
-.voucher-validity {
-    display: flex;
-    align-items: center;
-    gap: .375rem;
-    margin-top: .625rem;
-    color: var(--vl-muted);
-    font-size: .75rem;
-}
-
-.voucher-validity svg {
-    flex-shrink: 0;
 }
 
 .voucher-check {
@@ -376,9 +422,9 @@ body {
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
-    border: 1px solid #bfe3d0;
+    border: 1px solid #bcd8f5;
     border-radius: .75rem;
-    background: #f1faf5;
+    background: #f0f6fd;
 }
 
 .qty-stepper[hidden] {
@@ -397,7 +443,7 @@ body {
 }
 
 .qty-stepper button:hover:not(:disabled) {
-    background: #dff3e8;
+    background: #dcebfb;
 }
 
 .qty-stepper button:disabled {
@@ -487,7 +533,7 @@ body {
     width: 2.75rem;
     height: 2.75rem;
     border-radius: .875rem;
-    background: #e3f6ec;
+    background: #e6f1fc;
     color: var(--vl-primary-light);
 }
 
@@ -519,7 +565,7 @@ body {
     height: 4rem;
     margin-bottom: 1rem;
     border-radius: 50%;
-    background: #e3f6ec;
+    background: #e6f1fc;
     color: var(--vl-primary-light);
 }
 
@@ -533,7 +579,7 @@ body {
     overflow: hidden;
     border-radius: 1rem;
     background: #fff;
-    box-shadow: 0 1px 2px rgba(12, 42, 30, .06), 0 .25rem .75rem rgba(12, 42, 30, .06);
+    box-shadow: 0 1px 2px rgba(12, 27, 46, .06), 0 .25rem .75rem rgba(12, 27, 46, .06);
 }
 
 .cart-item-stub {
@@ -655,7 +701,8 @@ body {
         transition: none;
     }
 
-    .voucher-ticket:not(.is-unavailable):hover {
+    .voucher-ticket:not(.is-unavailable):hover,
+    .voucher-ticket:not(.is-unavailable):active {
         transform: none;
     }
 
