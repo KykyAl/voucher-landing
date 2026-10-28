@@ -14,6 +14,7 @@ class VoucherLandingTest extends TestCase
         $response->assertOk()
             ->assertSee('lang="id"', false)
             ->assertSee('Connect Pro')
+            ->assertSee('Connect Pro × Pasar Jaya — Beli Voucher')
             ->assertSee('Voucher WiFi 1 Jam')
             ->assertSee('Rp5.000')
             ->assertSee('Rp10.000')

@@ -3,16 +3,20 @@
 @php($rupiah = \App\Services\VoucherCatalog::formatRupiah(...))
 @php($cartIcon = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.4a1.5 1.5 0 0 0 1.5 1.1h9.2a1.5 1.5 0 0 0 1.5-1.2L21 8H6"/></svg>')
 
-@section('title', $brand['name'].' — Beli Voucher')
+@section('title', $brand['name'].' × '.$brand['partner'].' — Beli Voucher')
 @section('description', $brand['description'])
 
 @section('content')
 <header class="hero text-white">
     <div class="container py-4 py-md-5">
         <div class="d-flex align-items-center justify-content-between gap-2 mb-4">
-            <div class="d-flex align-items-center gap-2">
-                <span class="brand-mark"><x-brand-logo :size="34" /></span>
-                <span class="brand-title">{{ $brand['name'] }}</span>
+            {{-- Logo kolaborasi: Connect Pro × Pasar Jaya --}}
+            <div class="brand-lockup">
+                <x-brand-logo :size="34" />
+                <x-brand-wordmark :name="$brand['name']" />
+                <span class="brand-x" aria-hidden="true">×</span>
+                <x-partner-logo :size="24" />
+                <span class="partner-wordmark">{{ $brand['partner'] }}</span>
             </div>
             <button type="button" class="cart-trigger" data-bs-toggle="offcanvas" data-bs-target="#cart" aria-label="Buka keranjang">
                 {!! $cartIcon !!}
@@ -55,7 +59,11 @@
 
                             <div class="voucher-body">
                                 <div class="voucher-head">
-                                    <span class="voucher-brand"><x-brand-logo :size="24" />{{ $brand['name'] }}</span>
+                                    <span class="voucher-brand">
+                                        <x-brand-logo :size="22" /><x-brand-wordmark :name="$brand['name']" />
+                                        <span class="brand-x" aria-hidden="true">×</span><x-partner-logo :size="15" />
+                                        <span class="visually-hidden">bersama {{ $brand['partner'] }}</span>
+                                    </span>
                                     <span class="voucher-code">{{ $voucher['code'] }}</span>
                                 </div>
 
@@ -135,6 +143,7 @@
 
     <footer class="container py-4 text-center small text-secondary">
         Butuh bantuan? Hubungi <a href="mailto:{{ $brand['support_contact'] }}">{{ $brand['support_contact'] }}</a><br>
+        Kolaborasi {{ $brand['name'] }} × {{ $brand['partner'] }}<br>
         &copy; {{ now()->year }} FAB
     </footer>
 </main>

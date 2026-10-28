@@ -12,7 +12,7 @@ namespace App\Services;
 class VoucherCatalog
 {
     /**
-     * @return array{name: string, tagline: string, description: string, support_contact: string}
+     * @return array{name: string, partner: string, tagline: string, description: string, support_contact: string}
      */
     public function brand(): array
     {
