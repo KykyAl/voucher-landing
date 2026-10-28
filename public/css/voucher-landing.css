@@ -1,13 +1,13 @@
 :root {
     --vl-primary: #0b2a55;
     --vl-primary-light: #1670c8;
-    --vl-accent: #ffc107;
+    --vl-accent: #ff8a00;
     --vl-ink: #0c1b2e;
     --vl-muted: #5b6b7d;
     --vl-line: #dde5ef;
     --vl-page-bg: #f3f6fa;
     --vl-stub: linear-gradient(165deg, #0b2a55 0%, #1462b8 55%, #1e8fe1 100%);
-    --vl-stub-gold: linear-gradient(165deg, #9a6412 0%, #d39a2c 55%, #f2c25a 100%);
+    --vl-stub-featured: linear-gradient(165deg, #b84a00 0%, #f07800 55%, #ffad33 100%);
     --vl-summary-height: 84px;
     --bs-body-font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -53,26 +53,90 @@ body {
     --bs-btn-focus-shadow-rgb: 22, 112, 200;
 }
 
-.brand-mark {
+/* Logo: ikon + tulisan "Connect" biru & "Pro" oranye */
+.brand-lockup {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    height: 2.75rem;
-    padding: 0 .6rem;
-    border-radius: .875rem;
+    gap: .5rem;
+    padding: .375rem 1rem .375rem .625rem;
+    border-radius: 999px;
     background: #fff;
     box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .2);
 }
 
-.brand-title {
-    font-size: 1.25rem;
-    font-weight: 800;
-    letter-spacing: .08em;
-    text-transform: uppercase;
+.brand-lockup .brand-wordmark {
+    font-size: 1.375rem;
 }
 
 .brand-logo {
     flex-shrink: 0;
+}
+
+.brand-wordmark {
+    font-style: italic;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.02em;
+    white-space: nowrap;
+}
+
+.brand-wordmark .is-first {
+    color: #1478e6;
+}
+
+.brand-wordmark .is-rest {
+    color: var(--vl-accent);
+}
+
+/* Partner kolaborasi: Pasar Jaya */
+.partner-logo {
+    flex-shrink: 0;
+}
+
+.partner-wordmark {
+    color: #22367a;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.01em;
+    text-transform: lowercase;
+    white-space: nowrap;
+}
+
+.brand-lockup .partner-wordmark {
+    font-size: 1.25rem;
+}
+
+.brand-x {
+    color: #9aa8ba;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.brand-lockup .brand-x {
+    margin: 0 .125rem;
+    font-size: 1.125rem;
+}
+
+@media (max-width: 420px) {
+    .brand-lockup {
+        gap: .375rem;
+        padding: .3rem .75rem .3rem .5rem;
+    }
+
+    .brand-lockup .brand-logo {
+        width: 26px;
+        height: 24px;
+    }
+
+    .brand-lockup .partner-logo {
+        width: 18px;
+        height: 20px;
+    }
+
+    .brand-lockup .brand-wordmark,
+    .brand-lockup .partner-wordmark {
+        font-size: 1rem;
+    }
 }
 
 /*
@@ -136,7 +200,7 @@ body {
 .voucher-ticket.is-featured .voucher-stub {
     background:
         repeating-linear-gradient(135deg, rgba(255, 255, 255, .1) 0 6px, transparent 6px 14px),
-        var(--vl-stub-gold);
+        var(--vl-stub-featured);
 }
 
 .voucher-stub-mark {
@@ -176,7 +240,7 @@ body {
 }
 
 .voucher-ticket.is-featured .voucher-body {
-    background: radial-gradient(120% 70% at 100% 0, rgba(242, 194, 90, .18), transparent 60%);
+    background: radial-gradient(120% 70% at 100% 0, rgba(255, 138, 0, .14), transparent 60%);
 }
 
 /* Lubang sobekan di atas & bawah garis putus-putus */
@@ -211,12 +275,8 @@ body {
 .voucher-brand {
     display: inline-flex;
     align-items: center;
-    gap: .35rem;
-    color: #1e8fe1;
-    font-size: .8125rem;
-    font-weight: 800;
-    letter-spacing: .1em;
-    text-transform: uppercase;
+    gap: .375rem;
+    font-size: 1rem;
 }
 
 .voucher-label-row {
@@ -261,9 +321,9 @@ body {
 }
 
 .voucher-badge.is-gold {
-    background: linear-gradient(135deg, #fff3d1, #ffe39a);
-    color: #7a4d00;
-    box-shadow: inset 0 0 0 1px rgba(211, 154, 44, .35);
+    background: linear-gradient(135deg, #fff1e0, #ffd9ad);
+    color: #8a3c00;
+    box-shadow: inset 0 0 0 1px rgba(255, 138, 0, .35);
 }
 
 .voucher-badge.is-muted {
@@ -599,7 +659,7 @@ body {
 .cart-item.is-featured .cart-item-stub {
     background:
         repeating-linear-gradient(135deg, rgba(255, 255, 255, .1) 0 6px, transparent 6px 14px),
-        var(--vl-stub-gold);
+        var(--vl-stub-featured);
 }
 
 .cart-item-stub span {

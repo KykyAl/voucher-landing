@@ -15,6 +15,7 @@ return [
 
     'brand' => [
         'name' => 'Connect Pro',
+        'partner' => 'Pasar Jaya',
         'tagline' => 'Voucher WiFi cepat, praktis & hemat',
         'description' => 'Pilih paket internet sesuai kebutuhan Anda, dan bayar dengan mudah.',
         'support_contact' => 'cs@connectpro.test',
