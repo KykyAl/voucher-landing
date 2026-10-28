@@ -143,7 +143,7 @@
 
     <footer class="container py-4 text-center small text-secondary">
         Butuh bantuan? Hubungi <a href="mailto:{{ $brand['support_contact'] }}">{{ $brand['support_contact'] }}</a><br>
-        Kolaborasi {{ $brand['name'] }} × {{ $brand['partner'] }}<br>
+         {{ $brand['name'] }} × {{ $brand['partner'] }}<br>
         &copy; {{ now()->year }} FAB
     </footer>
 </main>
