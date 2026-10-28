@@ -51,6 +51,16 @@ return [
             'is_available' => true,
             'is_featured' => false,
         ],
+        [
+            'code' => 'CP-1BLN',
+            'name' => 'Voucher WiFi 1 Bulan',
+            'description' => 'Paling hemat untuk pemakaian rutin sebulan penuh.',
+            'face_value' => 100000,
+            'price' => 100000,
+            'duration' => '1 Bulan',
+            'is_available' => false,
+            'is_featured' => false,
+        ],
     ],
 
     'steps' => [

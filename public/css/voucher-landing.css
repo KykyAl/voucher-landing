@@ -170,6 +170,7 @@ body {
     min-width: 0;
     padding: 1rem 1.125rem 1.125rem;
     border-left: 2px dashed var(--vl-line);
+    container-type: inline-size;
     background: radial-gradient(120% 70% at 100% 0, rgba(30, 143, 225, .1), transparent 60%);
     color: var(--vl-ink);
 }
@@ -282,10 +283,12 @@ body {
 .voucher-amount {
     display: block;
     margin: .1rem 0 .35rem;
-    font-size: clamp(1.625rem, 1.3rem + 1vw, 1.875rem);
+    /* Mengikuti lebar kartu agar nominal panjang (mis. Rp1.000.000) tetap muat */
+    font-size: clamp(1.25rem, 12.5cqi, 1.875rem);
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: -.02em;
+    white-space: nowrap;
     color: var(--vl-ink);
 }
 
