@@ -62,7 +62,7 @@
                                     <span class="voucher-brand">
                                         <x-brand-logo :size="22" /><x-brand-wordmark :name="$brand['name']" />
                                         <span class="brand-x" aria-hidden="true">×</span><x-partner-logo :size="15" />
-                                        <span class="visually-hidden">bersama {{ $brand['partner'] }}</span>
+                                        <span class="partner-wordmark">{{ $brand['partner'] }}</span>
                                     </span>
                                     <span class="voucher-code">{{ $voucher['code'] }}</span>
                                 </div>

@@ -272,11 +272,27 @@ body {
     margin-bottom: .875rem;
 }
 
+/* Logo kolaborasi di kartu: ikut lebar kartu supaya "pasar jaya" tetap muat */
 .voucher-brand {
     display: inline-flex;
     align-items: center;
-    gap: .375rem;
-    font-size: 1rem;
+    gap: .3em;
+    font-size: clamp(.6875rem, 5.4cqi, .9375rem);
+    white-space: nowrap;
+}
+
+.voucher-brand .brand-logo {
+    width: 1.4em;
+    height: auto;
+}
+
+.voucher-brand .partner-logo {
+    width: 1em;
+    height: auto;
+}
+
+.voucher-brand .partner-wordmark {
+    font-size: .95em;
 }
 
 .voucher-label-row {
