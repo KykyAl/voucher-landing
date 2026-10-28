@@ -230,5 +230,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/voucher-landing.js') }}"></script>
+    <script src="{{ asset('js/voucher-landing.js') }}?v={{ hash_file('crc32b', public_path('js/voucher-landing.js')) }}"></script>
 @endpush
