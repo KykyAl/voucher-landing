@@ -16,6 +16,7 @@
           crossorigin="anonymous">
     {{-- ?v= berubah setiap isi file berubah, agar browser tidak memakai CSS lama dari cache --}}
     <link rel="stylesheet" href="{{ asset('css/voucher-landing.css') }}?v={{ hash_file('crc32b', public_path('css/voucher-landing.css')) }}">
+    @stack('styles')
 </head>
 <body>
     @yield('content')

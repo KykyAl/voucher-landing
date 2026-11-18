@@ -1,144 +1,207 @@
 @extends('layouts.landing')
 @section('title', 'Dashboard Penjualan | Connect Pro')
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/voucher-dashboard.css') }}?v={{ hash_file('crc32b', public_path('css/voucher-dashboard.css')) }}">
+@endpush
 @section('content')
-@php use App\Services\VoucherCatalog; @endphp
-<header class="hero text-white">
-    <div class="container py-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <div>
-            <p class="mb-1 fw-semibold">Connect Pro</p>
-            <h1 class="h2 fw-bold mb-0">Dashboard Penjualan</h1>
+@php
+    use App\Services\VoucherCatalog;
+
+    $preview = $preview ?? false;
+    $metrics = [
+        ['Total transaksi', number_format((int) $totals->transactions, 0, ',', '.'), 'transaksi'],
+        ['Voucher terjual', number_format((int) $totals->units, 0, ',', '.'), 'voucher'],
+        ['Pendapatan', VoucherCatalog::formatRupiah((int) $totals->revenue), 'pendapatan'],
+    ];
+@endphp
+<div class="sales-dashboard">
+    <header class="sales-top">
+        <div class="sales-wrap sales-top-inner">
+            <a href="{{ route('voucher.landing') }}" class="sales-brand">
+                <span class="sales-brand-mark"><x-brand-logo :size="24" /></span>
+                <span>Connect Pro</span>
+            </a>
+            <div class="sales-actions">
+                @if ($preview)
+                    <span class="sales-preview"><span aria-hidden="true"></span> Data contoh</span>
+                @else
+                    <span class="sales-user">{{ auth()->user()->name }}</span>
+                @endif
+                <a class="sales-button" href="{{ route('voucher.landing') }}">Katalog <span aria-hidden="true">↗</span></a>
+                @unless ($preview)
+                    <form method="post" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="sales-button" type="submit">Keluar</button>
+                    </form>
+                @endunless
+            </div>
         </div>
-        <div class="d-flex flex-wrap align-items-center gap-3">
-            @if ($preview ?? false)
-                <span class="badge text-bg-light">Preview · Data contoh</span>
-            @else
-                <span>{{ auth()->user()->name }}</span>
-            @endif
-            <a class="text-white" href="{{ route('voucher.landing') }}">Katalog</a>
-            @unless ($preview ?? false)
-            <form method="post" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-sm btn-outline-light">Keluar</button>
-            </form>
+    </header>
+
+    <main class="sales-wrap sales-main" id="ringkasan">
+        @if (session('status'))
+            <p class="alert alert-success" role="status">{{ session('status') }}</p>
+        @endif
+
+        <div class="sales-heading">
+            <div>
+                <h1>Dashboard Penjualan</h1>
+                <p>Ringkasan semua pembelian voucher yang sudah lunas.</p>
+            </div>
+            @unless ($preview)
+                <a class="sales-button sales-button-primary" href="#catat" onclick="document.getElementById('catat').open = true">+ Catat pembelian</a>
             @endunless
         </div>
-    </div>
-</header>
 
-<main class="container py-4">
-    @if (session('status'))
-        <p class="alert alert-success" role="status">{{ session('status') }}</p>
-    @endif
-    <h2 class="h5 fw-bold mb-3">Ringkasan semua pembelian lunas</h2>
-    <div class="row g-3 mb-4">
-        @foreach ([
-            'Total transaksi' => number_format((int) $totals->transactions, 0, ',', '.'),
-            'Voucher terjual' => number_format((int) $totals->units, 0, ',', '.'),
-            'Pendapatan' => VoucherCatalog::formatRupiah((int) $totals->revenue),
-        ] as $label => $value)
-            <div class="col-md-4">
-                <div class="card rounded-4 border-0 shadow-sm p-3 h-100">
-                    <p class="text-secondary mb-1">{{ $label }}</p>
-                    <p class="h3 fw-bold mb-0">{{ $value }}</p>
+        <section class="sales-metrics" aria-label="Ringkasan penjualan">
+            @foreach ($metrics as [$label, $value, $type])
+                <article class="sales-metric sales-metric-{{ $type }}">
+                    <div class="sales-metric-top">
+                        <h2>{{ $label }}</h2>
+                        <span class="sales-metric-icon" aria-hidden="true">
+                            @switch($type)
+                                @case('transaksi') <i class="sales-icon-receipt"></i> @break
+                                @case('voucher') <i class="sales-icon-ticket"></i> @break
+                                @case('pendapatan') Rp @break
+                            @endswitch
+                        </span>
+                    </div>
+                    <p class="sales-value">{{ $value }}</p>
+                </article>
+            @endforeach
+        </section>
+
+        <section class="sales-panel" aria-labelledby="sales-chart-title">
+            <div class="sales-panel-head">
+                <div>
+                    <h2 class="sales-panel-title" id="sales-chart-title">Tren transaksi</h2>
+                    <p>Jumlah pembelian lunas per hari</p>
+                </div>
+                <span class="sales-period">14 hari terakhir · WIB</span>
+            </div>
+            <div class="sales-chart-scroll" tabindex="0" role="region" aria-label="Grafik transaksi harian">
+                <div class="sales-chart">
+                    <div class="sales-axis" aria-hidden="true">
+                        <span>{{ $chartMax }}</span>
+                        <span>0</span>
+                    </div>
+                    <ol class="sales-bars" aria-label="Jumlah transaksi per tanggal">
+                        @foreach ($days as $day)
+                            <li @class(['sales-bar-day', 'sales-bar-today' => $loop->last])>
+                                <div class="sales-bar-track">
+                                    <div @class(['sales-bar', 'sales-bar-empty' => $day['count'] === 0]) style="--bar-height: {{ $day['count'] / $chartMax * 100 }}%">
+                                        <span class="sales-bar-count">{{ $day['count'] }}</span>
+                                    </div>
+                                </div>
+                                <span class="sales-bar-label">{{ $day['label'] }}</span>
+                            </li>
+                        @endforeach
+                    </ol>
                 </div>
             </div>
-        @endforeach
-    </div>
+        </section>
 
-    <section class="card rounded-4 border-0 shadow-sm p-3 p-md-4 mb-4">
-        <h2 class="h5 fw-bold">Grafik transaksi lunas</h2>
-        <p class="text-secondary small mb-3">14 hari terakhir · WIB</p>
-        <div class="overflow-auto">
-            <ol class="list-unstyled d-grid gap-2 mb-0" aria-label="Jumlah transaksi per tanggal" style="grid-template-columns: repeat(14, minmax(44px, 1fr)); min-width: 720px">
-                @foreach ($days as $day)
-                    <li class="text-center small">
-                        <div class="d-flex flex-column justify-content-end align-items-center border-bottom pb-1" style="height: 148px">
-                            <strong>{{ $day['count'] }}</strong>
-                            <div class="rounded-top" aria-hidden="true" style="background: var(--vl-primary-light); width: 65%; height: {{ round(114 * $day['count'] / $chartMax) }}px"></div>
-                        </div>
-                        <div class="mt-2 text-secondary">{{ $day['label'] }}</div>
-                    </li>
-                @endforeach
-            </ol>
-        </div>
-    </section>
+        <section class="sales-panel sales-table-panel" aria-labelledby="sales-packages-title">
+            <div class="sales-panel-head">
+                <div>
+                    <h2 class="sales-panel-title" id="sales-packages-title">Penjualan per paket</h2>
+                    <p>Urutan berdasarkan jumlah voucher terjual</p>
+                </div>
+            </div>
+            <div class="table-responsive" tabindex="0" role="region" aria-labelledby="sales-packages-title">
+                <table class="sales-table">
+                    <thead>
+                        <tr><th scope="col">Paket</th><th scope="col">Transaksi</th><th scope="col">Voucher terjual</th><th scope="col">Pendapatan</th></tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($packages as $package)
+                            <tr>
+                                <th scope="row">{{ $package->voucher_name }}</th>
+                                <td>{{ $package->transactions }}</td>
+                                <td>{{ $package->units }}</td>
+                                <td class="sales-money">{{ VoucherCatalog::formatRupiah((int) $package->revenue) }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="4" class="sales-empty">Belum ada penjualan yang tercatat.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <section class="card rounded-4 border-0 shadow-sm p-3 p-md-4 mb-4">
-        <h2 class="h5 fw-bold">Penjualan per paket</h2>
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead><tr><th scope="col">Paket</th><th scope="col">Transaksi</th><th scope="col">Voucher terjual</th><th scope="col">Pendapatan</th></tr></thead>
-                <tbody>
-                    @forelse ($packages as $package)
-                        <tr><td>{{ $package->voucher_name }}</td><td>{{ $package->transactions }}</td><td>{{ $package->units }}</td><td>{{ VoucherCatalog::formatRupiah((int) $package->revenue) }}</td></tr>
-                    @empty
-                        <tr><td colspan="4" class="text-secondary">Belum ada penjualan yang tercatat.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section class="card rounded-4 border-0 shadow-sm p-3 p-md-4 mb-4">
-        <h2 class="h5 fw-bold">Riwayat pembelian</h2>
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead><tr><th scope="col">Tanggal lunas</th><th scope="col">Referensi</th><th scope="col">Paket</th><th scope="col">Jumlah</th><th scope="col">Total dibayar</th></tr></thead>
-                <tbody>
-                    @forelse ($sales as $sale)
-                        <tr><td class="text-nowrap">{{ \Carbon\CarbonImmutable::parse($sale->paid_on)->locale('id')->translatedFormat('d M Y') }}</td><td>{{ $sale->reference }}</td><td>{{ $sale->voucher_name }}</td><td>{{ $sale->quantity }}</td><td>{{ VoucherCatalog::formatRupiah($sale->total) }}</td></tr>
-                    @empty
-                        <tr><td colspan="5" class="text-secondary">Belum ada pembelian lunas yang tercatat.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-        @if (! ($preview ?? false) && $sales->hasPages())
-            <div class="mt-3">{{ $sales->links('pagination::simple-bootstrap-5') }}</div>
-        @endif
-    </section>
-
-    @unless ($preview ?? false)
-    <details class="card rounded-4 border-0 shadow-sm p-3 p-md-4" @if ($errors->any()) open @endif>
-        <summary class="h5 fw-bold mb-0">Catat pembelian lunas</summary>
-        <p class="text-secondary mt-3">Isi setelah pembayaran dikonfirmasi. Gunakan nomor referensi yang unik untuk setiap transaksi.</p>
-        @if ($errors->any())
-            <ul class="alert alert-danger ps-5" role="alert">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        @endif
-        <form method="post" action="{{ route('dashboard.sales.store') }}" class="row g-3">
-            @csrf
-            <div class="col-md-6">
-                <label for="reference" class="form-label">Referensi transaksi</label>
-                <input id="reference" name="reference" class="form-control" value="{{ old('reference') }}" maxlength="80" required>
+        <section class="sales-panel sales-table-panel" aria-labelledby="sales-history-title">
+            <div class="sales-panel-head">
+                <div>
+                    <h2 class="sales-panel-title" id="sales-history-title">Riwayat pembelian</h2>
+                    <p>Transaksi lunas terbaru</p>
+                </div>
             </div>
-            <div class="col-md-6">
-                <label for="voucher_code" class="form-label">Paket voucher</label>
-                <select id="voucher_code" name="voucher_code" class="form-select" required>
-                    <option value="">Pilih paket</option>
-                    @foreach ($vouchers as $voucher)
-                        <option value="{{ $voucher['code'] }}" @selected(old('voucher_code') === $voucher['code'])>{{ $voucher['name'] }}</option>
-                    @endforeach
-                </select>
+            <div class="table-responsive" tabindex="0" role="region" aria-labelledby="sales-history-title">
+                <table class="sales-table sales-history">
+                    <thead>
+                        <tr><th scope="col">Referensi</th><th scope="col">Tanggal lunas</th><th scope="col">Paket</th><th scope="col">Jumlah</th><th scope="col">Total dibayar</th></tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($sales as $sale)
+                            <tr>
+                                <th scope="row"><span class="sales-reference">{{ $sale->reference }}</span></th>
+                                <td>{{ \Carbon\CarbonImmutable::parse($sale->paid_on)->locale('id')->translatedFormat('d M Y') }}</td>
+                                <td>{{ $sale->voucher_name }}</td>
+                                <td>{{ $sale->quantity }}</td>
+                                <td class="sales-money">{{ VoucherCatalog::formatRupiah($sale->total) }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="5" class="sales-empty">Belum ada pembelian lunas yang tercatat.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-4">
-                <label for="quantity" class="form-label">Jumlah voucher</label>
-                <input id="quantity" name="quantity" type="number" min="1" max="10000" class="form-control" value="{{ old('quantity', 1) }}" required>
-            </div>
-            <div class="col-md-4">
-                <label for="total" class="form-label">Total dibayar (Rp)</label>
-                <input id="total" name="total" type="number" min="1" max="10000000000" class="form-control" value="{{ old('total') }}" required>
-            </div>
-            <div class="col-md-4">
-                <label for="paid_on" class="form-label">Tanggal lunas</label>
-                <input id="paid_on" name="paid_on" type="date" max="{{ $today }}" class="form-control" value="{{ old('paid_on', $today) }}" required>
-            </div>
-            <div class="col-12"><button class="btn btn-brand" type="submit">Simpan pembelian</button></div>
-        </form>
-    </details>
-    @endunless
-</main>
+            @if (! $preview && $sales->hasPages())
+                <div class="sales-pagination">{{ $sales->links('pagination::simple-bootstrap-5') }}</div>
+            @endif
+        </section>
+        @unless ($preview)
+            <details id="catat" class="sales-panel sales-entry" @if ($errors->any()) open @endif>
+                <summary class="sales-panel-title">Catat pembelian lunas</summary>
+                <p class="text-secondary mt-3">Isi setelah pembayaran dikonfirmasi. Gunakan nomor referensi yang unik untuk setiap transaksi.</p>
+                @if ($errors->any())
+                    <ul class="alert alert-danger ps-5" role="alert">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+                <form method="post" action="{{ route('dashboard.sales.store') }}" class="row g-3">
+                    @csrf
+                    <div class="col-md-6">
+                        <label for="reference" class="form-label">Referensi transaksi</label>
+                        <input id="reference" name="reference" class="form-control" value="{{ old('reference') }}" maxlength="80" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="voucher_code" class="form-label">Paket voucher</label>
+                        <select id="voucher_code" name="voucher_code" class="form-select" required>
+                            <option value="">Pilih paket</option>
+                            @foreach ($vouchers as $voucher)
+                                <option value="{{ $voucher['code'] }}" @selected(old('voucher_code') === $voucher['code'])>{{ $voucher['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="quantity" class="form-label">Jumlah voucher</label>
+                        <input id="quantity" name="quantity" type="number" min="1" max="10000" class="form-control" value="{{ old('quantity', 1) }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="total" class="form-label">Total dibayar (Rp)</label>
+                        <input id="total" name="total" type="number" min="1" max="10000000000" class="form-control" value="{{ old('total') }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="paid_on" class="form-label">Tanggal lunas</label>
+                        <input id="paid_on" name="paid_on" type="date" max="{{ $today }}" class="form-control" value="{{ old('paid_on', $today) }}" required>
+                    </div>
+                    <div class="col-12"><button class="sales-button sales-button-primary" type="submit">Simpan pembelian</button></div>
+                </form>
+            </details>
+        @endunless
+    </main>
+</div>
 @endsection
