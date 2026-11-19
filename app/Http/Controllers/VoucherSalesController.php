@@ -45,7 +45,7 @@ class VoucherSalesController extends Controller
 
     public function preview(VoucherCatalog $catalog): View
     {
-        abort_unless(app()->environment('local'), 404);
+        abort_unless(app()->environment('local') || config('voucher.static_preview'), 404);
 
         $today = CarbonImmutable::today('Asia/Jakarta');
         $vouchers = collect($catalog->vouchers())->where('is_available', true)->values();

@@ -39,7 +39,7 @@ jobs:
           cp .env.example .env
           sed -i 's/^APP_ENV=.*/APP_ENV=production/; s/^APP_DEBUG=.*/APP_DEBUG=false/; s/^SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env
           echo "ASSET_URL=${{ steps.pages.outputs.base_url }}" >> .env
-          echo 'VOUCHER_SHOW_DASHBOARD_LINK=false' >> .env
+          echo 'VOUCHER_SHOW_DASHBOARD_LINK=true' >> .env
           php artisan key:generate --force
 
       - name: Jalankan test
@@ -47,11 +47,13 @@ jobs:
 
       - name: Render halaman ke HTML statis
         run: |
+          export VOUCHER_STATIC_PREVIEW=true
           php artisan serve --port=8000 > /dev/null 2>&1 &
-          mkdir -p _site/css _site/js
+          mkdir -p _site/css _site/js _site/dashboard/preview
           curl --silent --fail --retry 10 --retry-connrefused --retry-delay 1 \
             http://127.0.0.1:8000/ -o _site/index.html
-          cp public/css/voucher-landing.css _site/css/
+          curl --silent --fail --retry 10 --retry-connrefused --retry-delay 1             http://127.0.0.1:8000/dashboard/preview -o _site/dashboard/preview/index.html
+          cp public/css/voucher-landing.css public/css/voucher-dashboard.css _site/css/
           cp public/js/voucher-landing.js _site/js/
           cp public/favicon.ico public/robots.txt _site/ 2>/dev/null || true
           touch _site/.nojekyll

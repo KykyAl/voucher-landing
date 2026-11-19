@@ -17,7 +17,7 @@
 <div class="sales-dashboard">
     <header class="sales-top">
         <div class="sales-wrap sales-top-inner">
-            <a href="{{ route('voucher.landing') }}" class="sales-brand">
+            <a href="{{ config('voucher.static_preview') ? asset('index.html') : route('voucher.landing') }}" class="sales-brand">
                 <span class="sales-brand-mark"><x-brand-logo :size="24" /></span>
                 <span>Connect Pro</span>
             </a>
@@ -27,7 +27,7 @@
                 @else
                     <span class="sales-user">{{ auth()->user()->name }}</span>
                 @endif
-                <a class="sales-button" href="{{ route('voucher.landing') }}">Katalog <span aria-hidden="true">↗</span></a>
+                <a class="sales-button" href="{{ config('voucher.static_preview') ? asset('index.html') : route('voucher.landing') }}">Katalog <span aria-hidden="true">↗</span></a>
                 @unless ($preview)
                     <form method="post" action="{{ route('logout') }}">
                         @csrf
