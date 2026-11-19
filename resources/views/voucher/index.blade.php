@@ -90,6 +90,7 @@
                                         <span class="voucher-duration">
                                             <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm0 1.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11Zm-.75 2v4.06l3.02 1.8.77-1.29-2.29-1.37V4.5h-1.5Z"/></svg>
                                             {{ $voucher['duration'] }}
+                                            @if
                                         </span>
                                     </div>
                                     @if ($voucher['discount_percent'] > 0)
