@@ -26,6 +26,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+          extensions: pdo_sqlite
 
       - id: pages
         uses: actions/configure-pages@v5
@@ -38,6 +39,7 @@ jobs:
           cp .env.example .env
           sed -i 's/^APP_ENV=.*/APP_ENV=production/; s/^APP_DEBUG=.*/APP_DEBUG=false/; s/^SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env
           echo "ASSET_URL=${{ steps.pages.outputs.base_url }}" >> .env
+          echo 'VOUCHER_SHOW_DASHBOARD_LINK=false' >> .env
           php artisan key:generate --force
 
       - name: Jalankan test

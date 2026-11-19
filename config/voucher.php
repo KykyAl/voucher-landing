@@ -73,4 +73,6 @@ return [
 
     'max_quantity' => 10,
 
+    'show_dashboard_link' => env('VOUCHER_SHOW_DASHBOARD_LINK', true),
+
 ];
