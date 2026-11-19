@@ -27,7 +27,7 @@
         <p class="lead mb-4 opacity-75">{{ $brand['description'] }}</p>
         <a href="#pilih-voucher" class="btn btn-light btn-lg fw-semibold px-4">Lihat Voucher</a>
         @if (config('voucher.show_dashboard_link'))
-            <a href="{{ route(app()->environment('local') ? 'dashboard.preview' : 'dashboard') }}" class="btn btn-outline-light ms-1">Dashboard</a>
+            <a href="{{ config('voucher.static_preview') ? asset('dashboard/preview/') : route(app()->environment('local') ? 'dashboard.preview' : 'dashboard') }}" class="btn btn-outline-light ms-1">Dashboard</a>
         @endif
     </div>
 </header>

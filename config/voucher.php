@@ -73,6 +73,8 @@ return [
 
     'max_quantity' => 10,
 
+    'static_preview' => env('VOUCHER_STATIC_PREVIEW', false),
+
     'show_dashboard_link' => env('VOUCHER_SHOW_DASHBOARD_LINK', true),
 
 ];
