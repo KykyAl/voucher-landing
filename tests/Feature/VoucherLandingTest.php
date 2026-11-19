@@ -26,6 +26,7 @@ class VoucherLandingTest extends TestCase
 
     public function test_static_landing_can_hide_the_dashboard_link(): void
     {
+        config(['voucher.show_dashboard_link' => true]);
         $this->get('/')->assertOk()->assertSee(route('dashboard'));
 
         config(['voucher.show_dashboard_link' => false]);
