@@ -24,6 +24,15 @@ class VoucherLandingTest extends TestCase
             ->assertSee('Pembayaran belum tersedia.');
     }
 
+    public function test_static_landing_can_hide_the_dashboard_link(): void
+    {
+        $this->get('/')->assertOk()->assertSee(route('dashboard'));
+
+        config(['voucher.show_dashboard_link' => false]);
+
+        $this->get('/')->assertOk()->assertDontSee(route('dashboard'));
+    }
+
     public function test_cart_drawer_uses_configured_maximum_quantity(): void
     {
         config(['voucher.max_quantity' => 5]);
